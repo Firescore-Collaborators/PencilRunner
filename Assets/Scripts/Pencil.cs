@@ -6,8 +6,10 @@ public class Pencil : MonoBehaviour
 {
     [SerializeField] float movementSpeed = 20f;
     [SerializeField] float rotationSpeed = 20f;
+    [SerializeField] float pencilFallWaitTime = 0.7f;
     //Vector3 targetPos;
 
+    
     GameObject mainGameObject;
     float movementThisFrame;
     float rotationThisFrame;
@@ -18,6 +20,10 @@ public class Pencil : MonoBehaviour
     bool reorder = false;
     Transform newTarget;
     Rotator rotator;
+
+    //GameSession gameSession;
+
+    
     // List<int> emptyCell;
     // int index;
     // Start is called before the first frame update
@@ -25,7 +31,7 @@ public class Pencil : MonoBehaviour
     private void Awake()
     {
         rotator = FindObjectOfType<Rotator>();
-
+       // gameSession = FindObjectOfType<GameSession>();
     }
     void Start()
     {
@@ -103,11 +109,11 @@ public class Pencil : MonoBehaviour
         {
             //rotator.GetComponent<Rotator>().ZoomOut();
             other.transform.GetComponent<Collider>().isTrigger = false;
-
+           // gameSession.AddPencil();   
 
             //other.transform.parent = transform.parent;
             int emptyCell;
-            emptyCell = this.mainPencil.GetEmptyCell();
+            emptyCell = this.mainPencil.GetEmptyCell(gameObject);
             if (emptyCell >= 0)
             {
                 //Debug.Log("Empty cell : " + emptyCell);
@@ -140,4 +146,13 @@ public class Pencil : MonoBehaviour
     }
 
 
+    public IEnumerator SpawnComplete()
+    {
+        yield return new WaitForSeconds(pencilFallWaitTime);
+
+        //Debug.Log("sdfsfdas");
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<CapsuleCollider>().isTrigger = true;
+        transform.GetChild(0).gameObject.SetActive(true);
+    }
 }

@@ -14,6 +14,7 @@ public class MainPencil : MonoBehaviour
 
     int switchSide = 1;
     int i = 1;
+    GameSession gameSession;
    // int idx = 1;
    
     // Start is called before the first frame update
@@ -22,6 +23,8 @@ public class MainPencil : MonoBehaviour
         //rotator = FindObjectOfType<Rotator>();
         pencils = new GameObject[pencilArrayLength];
         pencils[4] = gameObject;
+
+        gameSession = FindObjectOfType<GameSession>();
         //baseIndex = pencilArrayLength / 2;
     }
 
@@ -37,9 +40,12 @@ public class MainPencil : MonoBehaviour
         
     }
 
-    public int GetEmptyCell()
+    public int GetEmptyCell(GameObject obj)
     {
         zoomOut = true;
+        gameSession.AddPencil();
+        rotator.GetComponent<Rotator>().ActivateNewPencil(obj);
+        
        
         for(int i = pencilArrayLength - 1; i >= 0; i--)
         {
@@ -71,7 +77,7 @@ public class MainPencil : MonoBehaviour
             other.transform.GetComponent<Collider>().isTrigger = false;
             //other.transform.parent = transform.parent;
             int emptyCell;
-            emptyCell = GetEmptyCell();
+            emptyCell = GetEmptyCell(gameObject);
             if (emptyCell >= 0)
             {
                 //Debug.Log("Empty cell : " + emptyCell);
